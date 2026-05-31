@@ -1,2 +1,4 @@
 node_modules/
 data/batch*.mjs
+*.fixed.json
+generate_data.mjs

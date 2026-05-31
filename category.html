@@ -210,13 +210,39 @@
         // 分页
         let pagHtml = `<div style="width:100%;text-align:center;color:var(--color-text-muted);font-size:0.85rem;margin-bottom:8px;">
                          共 ${filtered.length} 首 · 第 ${currentPage}/${totalPages} 页
-                       </div>`;
+                       </div>
+                       <div style="display:flex;align-items:center;justify-content:center;gap:8px;">`;
         pagHtml += `<button onclick="changePage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>‹ 上一页</button>`;
-        for (let i = 1; i <= totalPages; i++) {
-          pagHtml += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
-        }
+        pagHtml += `<span style="font-size:0.85rem;color:var(--color-text-muted);white-space:nowrap;">第</span>
+                     <input type="number" min="1" max="${totalPages}" value="${currentPage}"
+                            id="pageJumpInput"
+                            style="width:50px;text-align:center;padding:4px 6px;border:1px solid var(--color-border);border-radius:4px;font-size:0.85rem;
+                                   background:var(--color-card-bg);color:var(--color-text);">
+                     <span style="font-size:0.85rem;color:var(--color-text-muted);white-space:nowrap;">页</span>`;
         pagHtml += `<button onclick="changePage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>下一页 ›</button>`;
+        pagHtml += `</div>`;
         pagination.innerHTML = pagHtml;
+
+        // 绑定跳转输入框 Enter 事件
+        const jumpInput = document.getElementById('pageJumpInput');
+        if (jumpInput) {
+          jumpInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              let p = parseInt(jumpInput.value, 10);
+              if (isNaN(p) || p < 1) p = 1;
+              if (p > totalPages) p = totalPages;
+              jumpInput.value = p;
+              changePage(p);
+            }
+          });
+          // 输入框失焦时自动修正
+          jumpInput.addEventListener('blur', () => {
+            let p = parseInt(jumpInput.value, 10);
+            if (isNaN(p) || p < 1) p = 1;
+            if (p > totalPages) p = totalPages;
+            jumpInput.value = p;
+          });
+        }
         window.scrollTo({ top: 280, behavior: 'smooth' });
       }
 
