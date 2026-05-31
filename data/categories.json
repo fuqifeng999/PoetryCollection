@@ -1,9 +1,12 @@
 {
   "types": [
-    { "id": "tang", "name": "唐诗", "icon": "🏮", "count": 40, "desc": "唐代诗歌，中国古典文学巅峰" },
-    { "id": "song", "name": "宋词", "icon": "🎋", "count": 20, "desc": "宋代词作，长短句间蕴深情" },
-    { "id": "yuan", "name": "元曲", "icon": "🏯", "count": 10, "desc": "元代散曲，市井风韵入弦歌" },
-    { "id": "modern", "name": "现代诗", "icon": "📖", "count": 10, "desc": "自由体新诗，时代心声的流淌" }
+    { "id": "tang", "name": "唐诗", "icon": "🏮", "count": 184, "desc": "唐代诗歌，中国古典文学巅峰" },
+    { "id": "song", "name": "宋词", "icon": "🎋", "count": 74, "desc": "宋代词作，长短句间蕴深情" },
+    { "id": "yuan", "name": "元曲", "icon": "🏯", "count": 12, "desc": "元代散曲，市井风韵入弦歌" },
+    { "id": "modern", "name": "现代诗", "icon": "📖", "count": 13, "desc": "自由体新诗，时代心声的流淌" },
+    { "id": "preqin", "name": "先秦诗", "icon": "📜", "count": 7, "desc": "诗经楚辞，华夏诗魂之源" },
+    { "id": "fivedynasty", "name": "五代词", "icon": "🍂", "count": 3, "desc": "五代词章，承唐启宋的绝唱" },
+    { "id": "mingqing", "name": "明清诗词", "icon": "🏺", "count": 9, "desc": "明清诗篇，薪火相传的余韵" }
   ],
   "dynasties": ["唐代", "宋代", "元代", "明代", "清代", "近现代"],
   "tags": ["山水", "边塞", "思乡", "爱情", "励志", "送别", "咏物", "怀古", "田园", "哲理", "闺怨", "羁旅"],

@@ -173,17 +173,29 @@
         });
       });
 
-      // 加载分类
+      // 加载分类（动态计算数量）
       const cats = await DataLoader.loadCategories();
+      const typeIds = ['tang', 'song', 'yuan', 'modern', 'preqin', 'fivedynasty', 'mingqing'];
+      const countPromises = typeIds.map(async id => {
+        const poems = await DataLoader.loadPoems(id);
+        return { id, count: poems.length };
+      });
+      const counts = await Promise.all(countPromises);
+      const countMap = {};
+      counts.forEach(c => { countMap[c.id] = c.count; });
+
       const catGrid = document.getElementById('categoryGrid');
-      catGrid.innerHTML = cats.types.map(t => `
-        <a href="category.html?type=${t.id}" class="category-card">
-          <span class="icon">${t.icon}</span>
-          <h3>${t.name}</h3>
-          <p>${t.desc}</p>
-          <span class="count">${t.count} 首</span>
-        </a>
-      `).join('');
+      catGrid.innerHTML = cats.types.map(t => {
+        const actualCount = countMap[t.id] || t.count;
+        return `
+          <a href="category.html?type=${t.id}" class="category-card">
+            <span class="icon">${t.icon}</span>
+            <h3>${t.name}</h3>
+            <p>${t.desc}</p>
+            <span class="count">${actualCount} 首</span>
+          </a>
+        `;
+      }).join('');
 
       // 加载每日一诗
       const dailyContainer = document.getElementById('dailyPoemContent');
