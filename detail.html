@@ -73,9 +73,7 @@
 
         <!-- 原文区 -->
         <div class="poem-content">
-          <div class="lang-toggle">
-            <button id="langToggle" onclick="toggleLang()">🌏 切换繁体</button>
-          </div>
+
           <div class="original-text" id="originalText">
             床前明月光，疑是地上霜。<br>
             举头望明月，低头思故乡。
@@ -413,20 +411,6 @@
         setTimeout(() => {
           AudioPlayer.play(currentPoem.content || '', { rate: currentRate, voiceId: currentVoice });
         }, 50);
-      }
-    }
-
-    // ===== 简繁切换（简单映射） =====
-    let isTraditional = false;
-    function toggleLang() {
-      isTraditional = !isTraditional;
-      document.getElementById('langToggle').textContent = isTraditional ? '🌏 切换简体' : '🌏 切换繁体';
-      if (currentPoem) {
-        // 简单模拟：这里只是示意，实际需要完整的繁简转换库
-        // 对于演示版本，我们不做完整转换，只切换显示
-        const text = currentPoem.content || '';
-        // 简单提示
-        alert(isTraditional ? '已切换为繁体显示（完整版需集成繁简转换库）' : '已切换为简体显示');
       }
     }
 
