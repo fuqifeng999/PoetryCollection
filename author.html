@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作者专题 — 诗词赏析</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">诗词赏析 <span>· 古韵今声</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+        <a href="category.html?type=all">全部合集</a>
+      </div>
+      <div class="nav-tools">
+        <div class="nav-search">
+          <input type="text" placeholder="搜索诗词…" id="navSearchInput">
+          <button onclick="Router.goSearch(document.getElementById('navSearchInput').value)">🔍</button>
+        </div>
+        <button class="theme-toggle"></button>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h2 id="authorTitle">作者专题</h2>
+      <p id="authorSubtitle"></p>
+    </div>
+  </div>
+
+  <div class="author-page">
+    <div class="container">
+      <div id="loadingState" class="loading-spinner" style="padding:40px"></div>
+
+      <div id="mainContent" style="display:none">
+        <!-- 作者简介 -->
+        <div class="author-profile" id="authorProfile">
+          <div class="author-avatar-lg" id="authorAvatar">李</div>
+          <div class="author-info">
+            <h2 id="authorName">李白</h2>
+            <div class="dynasty" id="authorDynasty">唐代</div>
+            <div class="bio" id="authorBio">…</div>
+          </div>
+        </div>
+
+        <!-- 名句 -->
+        <div class="author-famous-quotes" id="famousQuotesSection" style="display:none">
+          <h3>💎 经典名句</h3>
+          <div id="famousQuotesList"></div>
+        </div>
+
+        <!-- 作品列表 -->
+        <h3 style="font-family:var(--font-title);color:var(--color-accent);margin-bottom:16px">📚 全部作品</h3>
+        <div class="poem-grid" id="poemList"></div>
+      </div>
+
+      <div id="emptyState" style="display:none">
+        <div class="empty-state">
+          <div class="icon">🍂</div>
+          <p>未找到该作者的相关作品</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--color-text-muted)">请检查作者姓名是否正确</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-col">
+        <h4>诗词赏析</h4>
+        <a href="about.html">关于本站</a>
+      </div>
+      <div class="footer-col">
+        <h4>分类</h4>
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>诗词赏析 · 数据来源为公开古籍资源</p>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      ThemeManager.init();
+      ThemeManager.bindToggle('.theme-toggle');
+
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+
+      const params = Router.getParams();
+      const authorName = params.name || '';
+      if (!authorName) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+        return;
+      }
+
+      // 预置部分作者简介
+      const authorBios = {
+        '李白': '李白（701—762），字太白，号青莲居士，唐代伟大的浪漫主义诗人，被后人誉为"诗仙"。祖籍陇西成纪（今甘肃天水），生于碎叶城（今吉尔吉斯斯坦）。李白好酒、好剑、好游历，诗风豪放飘逸、想象奇绝，代表作有《静夜思》《望庐山瀑布》《将进酒》《蜀道难》等。《全唐诗》收录其诗作近千首。',
+        '杜甫': '杜甫（712—770），字子美，自号少陵野老，唐代伟大的现实主义诗人，被后人誉为"诗圣"。他生活在唐朝由盛转衰的时代，其诗作深刻反映了社会现实，被称为"诗史"。代表作有《春望》《登高》《兵车行》《茅屋为秋风所破歌》等。',
+        '王维': '王维（701—761），字摩诘，号摩诘居士，唐代山水田园诗派的代表人物。苏轼评价其"诗中有画，画中有诗"。晚年隐居辋川别业，潜心禅佛。代表作有《山居秋暝》《鸟鸣涧》《相思》《送元二使安西》等。',
+        '白居易': '白居易（772—846），字乐天，号香山居士，唐代伟大的现实主义诗人。倡导"新乐府运动"，主张"文章合为时而著，歌诗合为事而作"。代表作有《长恨歌》《琵琶行》《卖炭翁》《赋得古原草送别》等。',
+        '李商隐': '李商隐（813—858），字义山，号玉谿生，晚唐著名诗人。擅长律诗绝句，诗歌以婉约含蓄、意境朦胧著称，尤其以"无题"诗闻名于世。代表作有《锦瑟》《无题》《夜雨寄北》《嫦娥》等。',
+        '苏轼': '苏轼（1037—1101），字子瞻，号东坡居士，北宋伟大的文学家、书画家。在诗、词、文、书、画等多方面都达到了极高成就，是宋代文学的最高代表。其词开豪放一派，与辛弃疾并称"苏辛"。代表作有《水调歌头》《念奴娇·赤壁怀古》《定风波》等。',
+        '李清照': '李清照（1084—1155），号易安居士，宋代婉约派词人代表，被誉为"千古第一才女"。早期词作清新婉约，南渡后风格转为凄楚沉郁。代表作有《声声慢》《一剪梅》《如梦令》《醉花阴》等。',
+        '辛弃疾': '辛弃疾（1140—1207），字幼安，号稼轩，南宋豪放派词人代表，与苏轼并称"苏辛"。他不仅是词人，更是抗金将领。其词慷慨豪迈、雄浑悲壮，代表作有《永遇乐·京口北固亭怀古》《青玉案·元夕》《破阵子》等。',
+        '李煜': '李煜（937—978），南唐后主，五代最杰出的词人之一。前期词作多写宫廷生活，亡国后词风大变，以血泪写就的词作达到了极高的艺术成就。代表作有《虞美人》《浪淘沙》《相见欢》等。',
+        '柳永': '柳永（约987—1053），原名三变，字耆卿，北宋著名词人，婉约派代表人物。他大量创作慢词长调，对词体发展作出了重大贡献。代表作有《雨霖铃》《望海潮》《八声甘州》等。',
+        '马致远': '马致远（约1251—1321），号东篱，元代著名散曲家，"元曲四大家"之一。其散曲以意境深远、语言凝练著称，被誉为"秋思之祖"。代表作有《天净沙·秋思》《汉宫秋》等。',
+        '关汉卿': '关汉卿（约1234—1300），号已斋，元代伟大的戏剧家，"元曲四大家"之首。创作了大量杂剧作品，代表作有《窦娥冤》《救风尘》《单刀会》等，对后世戏曲发展影响深远。',
+        '徐志摩': '徐志摩（1897—1931），中国现代著名诗人、散文家，新月派代表人物。诗风清新秀丽、情感真挚，善于将西方诗歌技巧与中国古典意境相融合。代表作有《再别康桥》《偶然》《雪花的快乐》等。',
+        '海子': '海子（1964—1989），原名查海生，中国当代诗人。作品以纯粹、热烈、充满生命力的语言著称，在中国现代诗歌史上占有重要地位。代表作有《面朝大海，春暖花开》《亚洲铜》《日记》等。',
+        '顾城': '顾城（1956—1993），中国当代诗人，"朦胧诗"的代表人物之一。诗风纯净自然、富含哲理，被称为"童话诗人"。代表作有《一代人》《远和近》《我是任性的孩子》等。',
+        '林徽因': '林徽因（1904—1955），中国著名建筑学家、诗人。她的诗歌以细腻柔美、意境清新著称。代表作有《你是人间四月天》《莲灯》《深夜里听到乐声》等。',
+        '北岛': '北岛（1949—），原名赵振开，中国当代诗人，"朦胧诗"的代表人物。曾多次获诺贝尔文学奖提名。诗风冷峻深邃、富有哲理，代表作有《回答》《一切》《红帆船》等。',
+        '余光中': '余光中（1928—2017），台湾著名诗人、散文家、翻译家。诗风多变，早期受西方现代主义影响，后期回归中国古典传统。代表作有《乡愁》《白玉苦瓜》《寻李白》等。',
+        '戴望舒': '戴望舒（1905—1950），中国现代诗人，以《雨巷》成名，被称为"雨巷诗人"。诗风融合了中国古典诗歌意境与西方象征主义手法。代表作有《雨巷》《寻梦者》《我的记忆》等。',
+        '舒婷': '舒婷（1952—），中国当代诗人，"朦胧诗"的代表人物之一。诗风细腻深沉、富有女性意识。代表作有《致橡树》《神女峰》《这也是一切》等。'
+      };
+
+      try {
+        document.getElementById('authorTitle').textContent = authorName;
+        const poems = await DataLoader.getPoemsByAuthor(authorName);
+
+        if (poems.length === 0) {
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('emptyState').style.display = 'block';
+          return;
+        }
+
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        Router.setTitle(authorName);
+
+        // 作者信息
+        const dynasty = poems[0].dynasty || '';
+        document.getElementById('authorAvatar').textContent = authorName[0];
+        document.getElementById('authorName').textContent = authorName;
+        document.getElementById('authorDynasty').textContent = dynasty;
+        document.getElementById('authorSubtitle').textContent = `${dynasty} · ${poems.length} 首作品`;
+
+        // 简介
+        document.getElementById('authorBio').textContent = authorBios[authorName] || `${authorName}是${dynasty}著名诗人/词人，本站收录其代表作 ${poems.length} 首。`;
+
+        // 名句
+        const famous = poems.filter(p => p.famous_lines && p.famous_lines.length > 0);
+        if (famous.length > 0) {
+          document.getElementById('famousQuotesSection').style.display = 'block';
+          const quotes = famous.flatMap(p => (p.famous_lines || []).map(l => ({ text: l, title: p.title })));
+          document.getElementById('famousQuotesList').innerHTML = quotes.slice(0, 10).map(q =>
+            `<div class="quote-item">「${q.text}」<span style="font-size:0.8rem;color:var(--color-text-muted)"> —— 《${q.title}》</span></div>`
+          ).join('');
+        }
+
+        // 作品列表
+        document.getElementById('poemList').innerHTML = poems.map(p => {
+          const excerpt = (p.famous_lines && p.famous_lines[0]) || (p.content && p.content.split('\n')[0]) || '';
+          return `
+            <a href="detail.html?type=${p._type}&id=${p.id}" class="poem-card">
+              <div class="card-body">
+                <h4>${p.title}</h4>
+                <div class="author">${p.author} · ${p.dynasty || ''}</div>
+                <div class="excerpt">${excerpt}</div>
+              </div>
+              <div class="card-footer">
+                <span class="tag">${(p.tags && p.tags[0]) || ''}</span>
+                <span>${p.type || ''}</span>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+      } catch(e) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "daily": [
+    { "type": "tang", "id": 1 },
+    { "type": "song", "id": 1 },
+    { "type": "tang", "id": 5 },
+    { "type": "song", "id": 3 },
+    { "type": "yuan", "id": 1 },
+    { "type": "modern", "id": 1 },
+    { "type": "tang", "id": 10 },
+    { "type": "song", "id": 6 },
+    { "type": "tang", "id": 3 },
+    { "type": "modern", "id": 3 }
+  ],
+  "hot": [
+    { "type": "tang", "id": 1 },
+    { "type": "tang", "id": 3 },
+    { "type": "song", "id": 1 },
+    { "type": "song", "id": 6 },
+    { "type": "yuan", "id": 1 },
+    { "type": "modern", "id": 3 },
+    { "type": "tang", "id": 10 },
+    { "type": "tang", "id": 8 }
+  ],
+  "famous_sentences": [
+    { "text": "举头望明月，低头思故乡。", "author": "李白", "poem": "静夜思" },
+    { "text": "但愿人长久，千里共婵娟。", "author": "苏轼", "poem": "水调歌头" },
+    { "text": "问君能有几多愁？恰似一江春水向东流。", "author": "李煜", "poem": "虞美人" },
+    { "text": "面朝大海，春暖花开。", "author": "海子", "poem": "面朝大海，春暖花开" },
+    { "text": "落霞与孤鹜齐飞，秋水共长天一色。", "author": "王勃", "poem": "滕王阁序" },
+    { "text": "人生自古谁无死，留取丹心照汗青。", "author": "文天祥", "poem": "过零丁洋" },
+    { "text": "床前明月光，疑是地上霜。", "author": "李白", "poem": "静夜思" },
+    { "text": "众里寻他千百度，蓦然回首，那人却在灯火阑珊处。", "author": "辛弃疾", "poem": "青玉案·元夕" },
+    { "text": "枯藤老树昏鸦，小桥流水人家。", "author": "马致远", "poem": "天净沙·秋思" },
+    { "text": "轻轻的我走了，正如我轻轻的来。", "author": "徐志摩", "poem": "再别康桥" }
+  ]
+}

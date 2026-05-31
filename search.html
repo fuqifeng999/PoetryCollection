@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索 — 诗词赏析</title>
+  <meta name="description" content="搜索全品类诗词">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">诗词赏析 <span>· 古韵今声</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+        <a href="category.html?type=all">全部合集</a>
+      </div>
+      <div class="nav-tools">
+        <div class="nav-search">
+          <input type="text" placeholder="搜索诗词…" id="navSearchInput">
+          <button onclick="Router.goSearch(document.getElementById('navSearchInput').value)">🔍</button>
+        </div>
+        <button class="theme-toggle"></button>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="search-page">
+    <div class="container">
+      <div class="search-box-large">
+        <input type="text" id="searchInput" placeholder="输入诗词标题、作者、名句、关键词…" autofocus>
+        <button onclick="doSearch()">🔍 搜索</button>
+      </div>
+
+      <div id="searchStats" class="search-stats"></div>
+      <div id="searchResults"></div>
+      <div id="searchLoading" class="loading-spinner" style="display:none"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-col">
+        <h4>诗词赏析</h4>
+        <a href="about.html">关于本站</a>
+      </div>
+      <div class="footer-col">
+        <h4>分类</h4>
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>诗词赏析 · 数据来源为公开古籍资源</p>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      ThemeManager.init();
+      ThemeManager.bindToggle('.theme-toggle');
+
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+
+      // 搜索框回车
+      document.getElementById('searchInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') doSearch();
+      });
+      document.querySelectorAll('.nav-search input').forEach(inp => {
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            const val = inp.value.trim();
+            if (val) Router.goSearch(val);
+          }
+        });
+      });
+
+      // 自动搜索 URL 中的 q 参数
+      const params = Router.getParams();
+      if (params.q) {
+        document.getElementById('searchInput').value = params.q;
+        doSearch();
+      }
+    });
+
+    async function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) return;
+
+      const loading = document.getElementById('searchLoading');
+      const results = document.getElementById('searchResults');
+      const stats = document.getElementById('searchStats');
+
+      loading.style.display = 'flex';
+      results.innerHTML = '';
+
+      try {
+        const found = await DataLoader.searchPoems(q);
+        loading.style.display = 'none';
+
+        stats.textContent = found.length > 0
+          ? `找到 ${found.length} 条与「${q}」相关的结果`
+          : '';
+
+        SearchUI.renderResults(found, q, results);
+      } catch(e) {
+        loading.style.display = 'none';
+        results.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>搜索出错，请重试</p></div>';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于 — 诗词赏析</title>
+  <meta name="description" content="关于诗词赏析网站">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">诗词赏析 <span>· 古韵今声</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+        <a href="category.html?type=all">全部合集</a>
+      </div>
+      <div class="nav-tools">
+        <div class="nav-search">
+          <input type="text" placeholder="搜索诗词…" id="navSearchInput">
+          <button onclick="Router.goSearch(document.getElementById('navSearchInput').value)">🔍</button>
+        </div>
+        <button class="theme-toggle"></button>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h2>关于本站</h2>
+      <p>品千年诗词，赏人间风月</p>
+    </div>
+  </div>
+
+  <div class="about-page">
+    <div class="container">
+      <div class="about-content">
+        <section>
+          <h3>📖 网站介绍</h3>
+          <p><strong>诗词赏析</strong> 是一款轻量化、高颜值、沉浸式的全品类诗词赏析网站。一站式收录唐诗、宋词、元曲、近现代诗歌四大核心文体，集文字阅览、AI 语音朗读、意境配图赏析、诗词检索、分类品读于一体。</p>
+          <p>本站以极简古风为设计理念，无广告、无冗余弹窗，专注内容阅读，适配电脑、手机、平板全端访问，可作为大众诗词欣赏、学生诗词学习、文艺爱好者素材查阅的专属平台。</p>
+        </section>
+
+        <section>
+          <h3>🎯 核心特色</h3>
+          <p>✦ <strong>全品类整合</strong> — 打破单一文体局限，贯通唐诗、宋词、元曲与现代诗歌</p>
+          <p>✦ <strong>沉浸式体验</strong> — 原文 + 释义赏析 + 意境配图 + 语音朗读，多维感知诗词美感</p>
+          <p>✦ <strong>极简文艺风</strong> — 素雅古风界面，留白充足，无广告干扰</p>
+          <p>✦ <strong>轻量高效</strong> — 纯静态站点，加载迅速，零运维成本</p>
+          <p>✦ <strong>智能朗读</strong> — 基于 Web Speech API，免费无限制，多音色可选</p>
+          <p>✦ <strong>黑夜模式</strong> — 护眼暗黑古风界面，适配夜间阅读</p>
+        </section>
+
+        <section id="plan">
+          <h3>📋 收录说明</h3>
+          <p>本站诗词数据来源为开源诗词数据库、公开古籍资源（无版权风险），辅以人工整理赏析、注释、译文内容。目前已收录：</p>
+          <p>✦ 唐诗 40+ 首（持续扩充中，目标 3000+）</p>
+          <p>✦ 宋词 20+ 首（持续扩充中，目标 2000+）</p>
+          <p>✦ 元曲 10+ 首（持续扩充中，目标 800+）</p>
+          <p>✦ 现代诗 10+ 首（持续扩充中，目标 500+）</p>
+          <p style="margin-top:8px;font-size:0.85rem;color:var(--color-text-muted)">如有内容错误或遗漏，欢迎反馈。</p>
+        </section>
+
+        <section>
+          <h3>🚀 更新计划</h3>
+          <p><strong>一期（已上线）</strong>：网站架构、页面模板、基础诗词库、文字阅览、分类浏览、搜索、语音朗读、配图展示、全端适配</p>
+          <p><strong>二期（规划中）</strong>：诗词收藏、每日一诗、名句摘抄、黑夜模式、作者专题完善、更多诗词数据</p>
+          <p><strong>三期（远期）</strong>：诗词格律标注、朗诵字幕、诗词问答、学习功能、SEO 优化、内容扩容</p>
+        </section>
+
+        <section id="contact">
+          <h3>📬 联系方式</h3>
+          <p>本项目为个人公益项目，欢迎交流与反馈。</p>
+          <p>GitHub：<a href="#" target="_blank">项目地址</a></p>
+          <p style="font-size:0.85rem;color:var(--color-text-muted)">你也可以在 GitHub 提交 Issue 反馈问题或建议。</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top:0">
+    <div class="container">
+      <div class="footer-col">
+        <h4>诗词赏析</h4>
+        <a href="about.html">关于本站</a>
+        <a href="about.html#plan">更新计划</a>
+      </div>
+      <div class="footer-col">
+        <h4>分类</h4>
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>诗词赏析 · 品千年诗词，赏人间风月</p>
+      <p>© 2024 诗词赏析 · 非商用公益项目</p>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/router.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      ThemeManager.init();
+      ThemeManager.bindToggle('.theme-toggle');
+
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+
+      document.querySelectorAll('.nav-search input').forEach(inp => {
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            const val = inp.value.trim();
+            if (val) Router.goSearch(val);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

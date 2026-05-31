@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>诗词详情 — 诗词赏析</title>
+  <meta name="description" content="诗词原文、赏析、语音朗读">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">诗词赏析 <span>· 古韵今声</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+        <a href="category.html?type=all">全部合集</a>
+      </div>
+      <div class="nav-tools">
+        <div class="nav-search">
+          <input type="text" placeholder="搜索诗词…" id="navSearchInput">
+          <button onclick="Router.goSearch(document.getElementById('navSearchInput').value)">🔍</button>
+        </div>
+        <button class="theme-toggle"></button>
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="detail-page">
+    <div class="container">
+      <!-- 面包屑 -->
+      <div class="breadcrumb" id="breadcrumb">
+        <a href="index.html">首页</a>
+        <span class="sep">›</span>
+        <a href="category.html" id="bcCategory">分类</a>
+        <span class="sep">›</span>
+        <span id="bcTitle">加载中…</span>
+      </div>
+
+      <!-- 加载状态 -->
+      <div id="loadingState" class="loading-spinner" style="padding:80px"></div>
+
+      <!-- 主内容区 (加载完成后显示) -->
+      <div id="mainContent" style="display:none">
+
+        <!-- 标题区 -->
+        <div class="poem-header">
+          <h1 id="poemTitle">静夜思</h1>
+          <div class="meta">
+            <span id="poemAuthor">📝 李白</span>
+            <span id="poemDynasty">📅 唐代</span>
+            <span id="poemType">🏷️ 五言绝句</span>
+          </div>
+          <div class="tags" id="poemTags"></div>
+        </div>
+
+        <!-- 意境配图 -->
+        <div class="poem-image" id="poemImageContainer" style="display:none">
+          <img id="poemImage" src="" alt="诗词意境配图">
+          <div class="image-caption" id="imageCaption">📸 意境配图 · 古风水墨</div>
+        </div>
+
+        <!-- 原文区 -->
+        <div class="poem-content">
+          <div class="lang-toggle">
+            <button id="langToggle" onclick="toggleLang()">🌏 切换繁体</button>
+          </div>
+          <div class="original-text" id="originalText">
+            床前明月光，疑是地上霜。<br>
+            举头望明月，低头思故乡。
+          </div>
+        </div>
+
+        <!-- 语音控制栏 -->
+        <div class="audio-bar" id="audioBar">
+          <div class="controls">
+            <button id="playBtn" onclick="togglePlay()" title="播放/暂停">▶️</button>
+            <button onclick="stopAudio()" title="停止">⏹️</button>
+            <button onclick="replayAudio()" title="重播">🔄</button>
+          </div>
+          <div class="voice-control">
+            <label>音色</label>
+            <select id="voiceSelect" onchange="updateVoice()"></select>
+          </div>
+          <div class="speed-control">
+            <label>语速</label>
+            <select id="speedSelect" onchange="updateSpeed()"></select>
+          </div>
+          <div style="font-size:0.8rem;color:var(--color-text-muted);flex:1;text-align:right" id="audioStatus">
+            点击 ▶ 开始朗读
+          </div>
+        </div>
+
+        <!-- 分层内容 -->
+        <div class="poem-sections">
+
+          <!-- 译文 -->
+          <div class="poem-section" id="sectionTranslation">
+            <h3><span class="icon">📖</span> 白话译文</h3>
+            <div class="content" id="translationContent"></div>
+          </div>
+
+          <!-- 注释 -->
+          <div class="poem-section" id="sectionNotes">
+            <h3><span class="icon">📝</span> 字词注释</h3>
+            <div class="content" id="notesContent"></div>
+          </div>
+
+          <!-- 创作背景 -->
+          <div class="poem-section" id="sectionBackground" style="display:none">
+            <h3><span class="icon">📜</span> 创作背景</h3>
+            <div class="content" id="backgroundContent"></div>
+          </div>
+
+          <!-- 深度赏析 -->
+          <div class="poem-section" id="sectionAnalysis">
+            <h3><span class="icon">🌟</span> 深度赏析</h3>
+            <div class="content" id="analysisContent"></div>
+          </div>
+
+          <!-- 名句 -->
+          <div class="poem-section" id="sectionFamous" style="display:none">
+            <h3><span class="icon">💎</span> 千古名句</h3>
+            <div class="content" id="famousContent"></div>
+          </div>
+        </div>
+
+        <!-- 相关推荐 -->
+        <div class="related-section">
+          <h3>📚 相关推荐</h3>
+          <div class="poem-grid" id="relatedPoems"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-col">
+        <h4>诗词赏析</h4>
+        <a href="about.html">关于本站</a>
+      </div>
+      <div class="footer-col">
+        <h4>分类</h4>
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+      </div>
+      <div class="footer-col">
+        <a href="search.html">🔍 搜索</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>诗词赏析 · 数据来源为公开古籍资源</p>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/audio-player.js"></script>
+  <script>
+    // ===== 详情页逻辑 =====
+    let currentPoem = null;
+    let currentType = '';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      ThemeManager.init();
+      ThemeManager.bindToggle('.theme-toggle');
+
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+      navLinks.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          navLinks.classList.remove('open');
+        });
+      });
+
+      // 搜索框回车
+      document.querySelectorAll('.nav-search input').forEach(inp => {
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            const val = inp.value.trim();
+            if (val) Router.goSearch(val);
+          }
+        });
+      });
+
+      const params = Router.getParams();
+      const type = params.type || 'tang';
+      const id = params.id || 1;
+      currentType = type;
+
+      const typeNames = { tang:'唐诗', song:'宋词', yuan:'元曲', modern:'现代诗' };
+      document.getElementById('bcCategory').textContent = typeNames[type] || '分类';
+      document.getElementById('bcCategory').href = `category.html?type=${type}`;
+
+      // 加载诗词
+      try {
+        const poem = await DataLoader.getPoem(type, id);
+        if (!poem) throw new Error('未找到');
+        currentPoem = poem;
+        renderPoem(poem, type);
+      } catch(e) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('mainContent').innerHTML = '<div class="empty-state"><div class="icon">🍂</div><p>未找到该诗词</p></div>';
+        document.getElementById('mainContent').style.display = 'block';
+      }
+    });
+
+    function renderPoem(poem, type) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      Router.setTitle(poem.title);
+
+      // 面包屑
+      document.getElementById('bcTitle').textContent = poem.title;
+
+      // 标题区
+      document.getElementById('poemTitle').textContent = poem.title;
+      document.getElementById('poemAuthor').textContent = `📝 ${poem.author}`;
+      document.getElementById('poemDynasty').textContent = `📅 ${poem.dynasty || ''}`;
+      document.getElementById('poemType').textContent = `🏷️ ${poem.type || ''}`;
+
+      // 标签
+      const tagsContainer = document.getElementById('poemTags');
+      if (poem.tags && poem.tags.length > 0) {
+        tagsContainer.innerHTML = poem.tags.map(t => `<span class="tag">${t}</span>`).join('');
+      }
+
+      // 配图
+      if (poem.image) {
+        document.getElementById('poemImageContainer').style.display = 'block';
+        document.getElementById('poemImage').src = poem.image;
+      }
+
+      // 原文
+      document.getElementById('originalText').innerHTML = formatContent(poem.content || '');
+
+      // 译文
+      document.getElementById('translationContent').innerHTML = `<p>${poem.translation || '暂无译文'}</p>`;
+
+      // 注释
+      document.getElementById('notesContent').innerHTML = `<p>${poem.notes || '暂无注释'}</p>`;
+
+      // 创作背景
+      const bgSection = document.getElementById('sectionBackground');
+      if (poem.background) {
+        bgSection.style.display = 'block';
+        document.getElementById('backgroundContent').innerHTML = `<p>${poem.background}</p>`;
+      } else {
+        bgSection.style.display = 'none';
+      }
+
+      // 赏析
+      document.getElementById('analysisContent').innerHTML = `<p>${poem.analysis || '暂无赏析'}</p>`;
+
+      // 名句
+      const famousSection = document.getElementById('sectionFamous');
+      if (poem.famous_lines && poem.famous_lines.length > 0) {
+        famousSection.style.display = 'block';
+        document.getElementById('famousContent').innerHTML = poem.famous_lines.map(f =>
+          `<div style="font-size:1.1rem;color:var(--color-accent);font-style:italic;padding:4px 0">「${f}」</div>`
+        ).join('');
+      } else {
+        famousSection.style.display = 'none';
+      }
+
+      // 设置语音
+      setupAudio(poem);
+
+      // 相关推荐（同作者作品）
+      loadRelated(poem, type);
+    }
+
+    function formatContent(content) {
+      if (!content) return '';
+      return content.split('\n').filter(l => l.trim()).map(l =>
+        `<span class="line">${l}</span>`
+      ).join('');
+    }
+
+    // ===== 语音朗读 =====
+    let currentRate = 1.0;
+    let currentVoice = 'default';
+
+    function setupAudio(poem) {
+      const audioInit = AudioPlayer.init();
+      if (!audioInit) {
+        document.getElementById('audioBar').innerHTML = '<div style="padding:10px;color:var(--color-text-muted);font-size:0.85rem">⚠️ 您的浏览器不支持语音朗读功能</div>';
+        return;
+      }
+
+      // 填充速度选择
+      const speedSelect = document.getElementById('speedSelect');
+      AudioPlayer.SPEEDS.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.value;
+        opt.textContent = s.label;
+        if (s.value === 1.0) opt.selected = true;
+        speedSelect.appendChild(opt);
+      });
+
+      // 填充音色选择
+      const voiceSelect = document.getElementById('voiceSelect');
+      AudioPlayer.VOICES.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.id;
+        opt.textContent = v.name;
+        if (v.id === 'default') opt.selected = true;
+        voiceSelect.appendChild(opt);
+      });
+
+      // 诊断：打印当前浏览器可用的中文语音
+      setTimeout(() => {
+        const zhVoices = AudioPlayer.getAvailableVoices();
+        if (zhVoices.length > 0) {
+          console.log('可用中文语音:', zhVoices.map(v => v.name).join(', '));
+        } else {
+          console.warn('未找到中文语音，将使用浏览器默认语音。可用的全部语音:',
+            speechSynthesis.getVoices().map(v => `${v.name}(${v.lang})`).join(', '));
+        }
+      }, 500);
+
+      // 设置回调
+      AudioPlayer.setOnStateChange((state) => {
+        const statusEl = document.getElementById('audioStatus');
+        const playBtn = document.getElementById('playBtn');
+        if (state.isPlaying && state.isPaused) {
+          playBtn.textContent = '▶️';
+          statusEl.textContent = `⏸️ 已暂停 · 第 ${state.currentLineIdx + 1}/${state.totalLines} 句`;
+        } else if (state.isPlaying) {
+          playBtn.textContent = '⏸️';
+          statusEl.textContent = `🔊 朗读中 · 第 ${state.currentLineIdx + 1}/${state.totalLines} 句`;
+        } else {
+          playBtn.textContent = '▶️';
+          statusEl.textContent = state.totalLines > 0 ? '✅ 朗读完成' : '点击 ▶ 开始朗读';
+        }
+      });
+
+      AudioPlayer.setOnLineChange((idx, lines) => {
+        // 高亮当前句子
+        const linesEls = document.querySelectorAll('#originalText .line');
+        linesEls.forEach((el, i) => {
+          el.classList.toggle('reading-line', i === idx);
+        });
+      });
+    }
+
+    function togglePlay() {
+      if (!currentPoem) return;
+      const state = AudioPlayer.getState();
+      if (state.isPlaying && !state.isPaused) {
+        AudioPlayer.pause();
+      } else if (state.isPlaying && state.isPaused) {
+        AudioPlayer.resume();
+      } else {
+        const text = currentPoem.content || '';
+        AudioPlayer.play(text, { rate: currentRate, voiceId: currentVoice });
+      }
+    }
+
+    function stopAudio() {
+      AudioPlayer.stop();
+      document.querySelectorAll('#originalText .line').forEach(el => el.classList.remove('reading-line'));
+    }
+
+    function replayAudio() {
+      stopAudio();
+      if (currentPoem) {
+        AudioPlayer.play(currentPoem.content || '', { rate: currentRate, voiceId: currentVoice });
+      }
+    }
+
+    function updateSpeed() {
+      currentRate = parseFloat(document.getElementById('speedSelect').value);
+      restartAudio();
+    }
+
+    function updateVoice() {
+      currentVoice = document.getElementById('voiceSelect').value;
+      // 显示当前音色提示
+      const name = document.getElementById('voiceSelect').selectedOptions[0]?.text || currentVoice;
+      document.getElementById('audioStatus').textContent = `🎤 已切换: ${name}`;
+      restartAudio();
+    }
+
+    /** 如果正在播放，用当前音色/语速重新开始 */
+    function restartAudio() {
+      const state = AudioPlayer.getState();
+      if (state.isPlaying && currentPoem) {
+        AudioPlayer.stop();
+        // Chrome 需要微小延迟，否则 cancel 未完成就 speak 会失败
+        setTimeout(() => {
+          AudioPlayer.play(currentPoem.content || '', { rate: currentRate, voiceId: currentVoice });
+        }, 50);
+      }
+    }
+
+    // ===== 简繁切换（简单映射） =====
+    let isTraditional = false;
+    function toggleLang() {
+      isTraditional = !isTraditional;
+      document.getElementById('langToggle').textContent = isTraditional ? '🌏 切换简体' : '🌏 切换繁体';
+      if (currentPoem) {
+        // 简单模拟：这里只是示意，实际需要完整的繁简转换库
+        // 对于演示版本，我们不做完整转换，只切换显示
+        const text = currentPoem.content || '';
+        // 简单提示
+        alert(isTraditional ? '已切换为繁体显示（完整版需集成繁简转换库）' : '已切换为简体显示');
+      }
+    }
+
+    // ===== 相关推荐 =====
+    async function loadRelated(poem, type) {
+      const container = document.getElementById('relatedPoems');
+      try {
+        // 同作者的诗词
+        const authorPoems = await DataLoader.getPoemsByAuthor(poem.author);
+        const related = authorPoems.filter(p => p.id !== poem.id || p._type !== type).slice(0, 4);
+
+        // 如果不够，补充同类型其他作品
+        if (related.length < 4) {
+          const sameType = await DataLoader.loadPoems(type);
+          const more = sameType.filter(p => String(p.id) !== String(poem.id)).slice(0, 4 - related.length);
+          more.forEach(p => related.push({...p, _type: type}));
+        }
+
+        if (related.length === 0) {
+          container.innerHTML = '<p style="text-align:center;color:var(--color-text-muted)">暂无相关推荐</p>';
+          return;
+        }
+
+        container.innerHTML = related.slice(0, 4).map(p => {
+          const excerpt = (p.famous_lines && p.famous_lines[0]) || (p.content && p.content.split('\n')[0]) || '';
+          return `
+            <a href="detail.html?type=${p._type}&id=${p.id}" class="poem-card">
+              <div class="card-body">
+                <h4>${p.title}</h4>
+                <div class="author">${p.author}</div>
+                <div class="excerpt">${excerpt}</div>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+      } catch(e) {
+        container.innerHTML = '';
+      }
+    }
+  </script>
+</body>
+</html>

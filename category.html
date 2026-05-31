@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>诗词分类 — 诗词赏析</title>
+  <meta name="description" content="浏览唐诗、宋词、元曲、现代诗分类列表">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">诗词赏析 <span>· 古韵今声</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+        <a href="category.html?type=all">全部合集</a>
+      </div>
+      <div class="nav-tools">
+        <div class="nav-search">
+          <input type="text" placeholder="搜索诗词…" id="navSearchInput">
+          <button onclick="Router.goSearch(document.getElementById('navSearchInput').value)">🔍</button>
+        </div>
+        <button class="theme-toggle"></button>
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h2 id="pageTitle">加载中…</h2>
+      <p id="pageDesc"></p>
+    </div>
+  </div>
+
+  <section class="section" style="padding-top:20px">
+    <div class="container">
+      <!-- 筛选栏 -->
+      <div class="filter-bar" id="filterBar">
+        <label>题材：</label>
+        <select class="filter-select" id="filterTag">
+          <option value="">全部题材</option>
+        </select>
+        <label>作者：</label>
+        <select class="filter-select" id="filterAuthor">
+          <option value="">全部作者</option>
+        </select>
+      </div>
+
+      <!-- 诗词列表 -->
+      <div id="poemListContainer" class="poem-grid">
+        <div class="loading-spinner" style="grid-column:1/-1"></div>
+      </div>
+
+      <!-- 分页 -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-col">
+        <h4>诗词赏析</h4>
+        <a href="about.html">关于本站</a>
+        <a href="about.html#plan">更新计划</a>
+      </div>
+      <div class="footer-col">
+        <h4>诗词分类</h4>
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+      </div>
+      <div class="footer-col">
+        <h4>资源</h4>
+        <a href="search.html">搜索</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>诗词赏析 · 数据来源为公开古籍资源</p>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      ThemeManager.init();
+      ThemeManager.bindToggle('.theme-toggle');
+
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+      navLinks.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          navLinks.classList.remove('open');
+        });
+      });
+
+      const params = Router.getParams();
+      const type = params.type || 'all';
+      const filterTag = document.getElementById('filterTag');
+      const filterAuthor = document.getElementById('filterAuthor');
+      const container = document.getElementById('poemListContainer');
+      const pagination = document.getElementById('pagination');
+
+      // 设置页面标题
+      const typeNames = { tang:'唐诗', song:'宋词', yuan:'元曲', modern:'现代诗', preqin:'先秦', fivedynasty:'五代', mingqing:'明清', all:'全部合集' };
+      const typeDescs = { tang:'唐代诗歌，中国古典文学巅峰', song:'宋代词作，长短句间蕴深情', yuan:'元代散曲，市井风韵入弦歌', modern:'自由体新诗，时代心声的流淌', preqin:'诗经楚辞，华夏诗魂之源', fivedynasty:'五代词章，承唐启宋', mingqing:'明清诗篇，薪火相传', all:'六大文体，贯通古今' };
+      document.getElementById('pageTitle').textContent = typeNames[type] || '全部合集';
+      document.getElementById('pageDesc').textContent = typeDescs[type] || '';
+
+      // 加载数据
+      let allPoems = [];
+      if (type === 'all') {
+        const [tang, song, yuan, modern, preqin, fivedynasty, mingqing] = await Promise.all([
+          DataLoader.loadPoems('tang'),
+          DataLoader.loadPoems('song'),
+          DataLoader.loadPoems('yuan'),
+          DataLoader.loadPoems('modern'),
+          DataLoader.loadPoems('preqin'),
+          DataLoader.loadPoems('fivedynasty'),
+          DataLoader.loadPoems('mingqing')
+        ]);
+        allPoems = [
+          ...tang.map(p => ({...p, _type: 'tang'})),
+          ...song.map(p => ({...p, _type: 'song'})),
+          ...yuan.map(p => ({...p, _type: 'yuan'})),
+          ...modern.map(p => ({...p, _type: 'modern'})),
+          ...preqin.map(p => ({...p, _type: 'preqin'})),
+          ...fivedynasty.map(p => ({...p, _type: 'fivedynasty'})),
+          ...mingqing.map(p => ({...p, _type: 'mingqing'}))
+        ];
+      } else {
+        const poems = await DataLoader.loadPoems(type);
+        allPoems = poems.map(p => ({...p, _type: type}));
+      }
+
+      if (allPoems.length === 0) {
+        container.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="icon">🍂</div><p>暂未收录</p></div>';
+        return;
+      }
+
+      // 填充筛选
+      const tags = new Set();
+      const authors = new Set();
+      allPoems.forEach(p => {
+        if (p.tags) p.tags.forEach(t => tags.add(t));
+        if (p.author) authors.add(p.author);
+      });
+      tags.forEach(t => {
+        filterTag.innerHTML += `<option value="${t}">${t}</option>`;
+      });
+      authors.forEach(a => {
+        filterAuthor.innerHTML += `<option value="${a}">${a}</option>`;
+      });
+
+      let currentPage = 1;
+      const pageSize = 10;
+      let filtered = allPoems;
+
+      function render() {
+        const tag = filterTag.value;
+        const author = filterAuthor.value;
+        filtered = allPoems.filter(p => {
+          if (tag && (!p.tags || !p.tags.includes(tag))) return false;
+          if (author && p.author !== author) return false;
+          return true;
+        });
+
+        const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+        currentPage = Math.min(currentPage, totalPages);
+        const start = (currentPage - 1) * pageSize;
+        const pageItems = filtered.slice(start, start + pageSize);
+
+        container.innerHTML = pageItems.map(p => {
+          const excerpt = (p.famous_lines && p.famous_lines[0]) || (p.content && p.content.split('\n')[0]) || '';
+          return `
+            <a href="detail.html?type=${p._type}&id=${p.id}" class="poem-card">
+              <div class="card-body">
+                <h4>${p.title}</h4>
+                <div class="author">${p.author} · ${p.dynasty || ''}</div>
+                <div class="excerpt">${excerpt}</div>
+              </div>
+              <div class="card-footer">
+                <span class="tag">${(p.tags && p.tags[0]) || ''}</span>
+                <span>${p.type || ''}</span>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+        // 分页
+        let pagHtml = `<div style="width:100%;text-align:center;color:var(--color-text-muted);font-size:0.85rem;margin-bottom:8px;">
+                         共 ${filtered.length} 首 · 第 ${currentPage}/${totalPages} 页
+                       </div>`;
+        pagHtml += `<button onclick="changePage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>‹ 上一页</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          pagHtml += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        }
+        pagHtml += `<button onclick="changePage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>下一页 ›</button>`;
+        pagination.innerHTML = pagHtml;
+        window.scrollTo({ top: 280, behavior: 'smooth' });
+      }
+
+      window.changePage = (page) => {
+        if (page < 1) return;
+        currentPage = page;
+        render();
+      };
+
+      filterTag.addEventListener('change', () => { currentPage = 1; render(); });
+      filterAuthor.addEventListener('change', () => { currentPage = 1; render(); });
+
+      // 高亮当前分类在导航中
+      navLinks.querySelectorAll('a').forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href')?.includes(`type=${type}`)) a.classList.add('active');
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>

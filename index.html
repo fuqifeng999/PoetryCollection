@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>诗词赏析 — 品千年诗词，赏人间风月</title>
+  <meta name="description" content="一站式全品类诗词赏析平台，收录唐诗、宋词、元曲、现代诗歌，支持AI语音朗读、意境配图、全文检索。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+
+  <!-- Tailwind CSS (仅用CDN基础工具类) -->
+  <script src="https://cdn.tailwindcss.com/3.4.1?plugins=forms@0.5.7"></script>
+  <!-- 自定义古风样式 -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Fonts 古风字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ===== 顶部导航 ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        诗词赏析
+        <span>· 古韵今声</span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="category.html?type=tang" class="active">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+        <a href="category.html?type=all">全部合集</a>
+        <div class="nav-search mobile-show">
+          <input type="text" placeholder="搜索诗词、作者…" id="mobileSearch">
+          <button onclick="Router.goSearch(document.getElementById('mobileSearch').value)">🔍</button>
+        </div>
+      </div>
+
+      <div class="nav-tools">
+        <div class="nav-search">
+          <input type="text" placeholder="搜索诗词、作者…" id="navSearchInput">
+          <button onclick="Router.goSearch(document.getElementById('navSearchInput').value)">🔍</button>
+        </div>
+        <button class="theme-toggle" aria-label="切换主题"></button>
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== 横幅区 ===== -->
+  <section class="hero">
+    <div class="container">
+      <h1>品千年诗词，赏人间风月</h1>
+      <p>一站式收录唐诗、宋词、元曲、现代诗歌 · 语音朗读 · 意境配图 · 全文检索</p>
+      <div class="hero-actions">
+        <a href="#dailyPoem" class="btn btn-primary">📖 每日一诗</a>
+        <a href="#categories" class="btn btn-secondary">📚 全部分类</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 每日一诗 ===== -->
+  <section class="section" id="dailyPoem">
+    <div class="container">
+      <h2 class="section-title">每日一诗</h2>
+      <p class="section-subtitle">随缘品读 · 一期一会</p>
+      <div id="dailyPoemContent">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 四大分类入口 ===== -->
+  <section class="section" id="categories">
+    <div class="container">
+      <h2 class="section-title">诗词分类</h2>
+      <p class="section-subtitle">选择文体，开启品读之旅</p>
+      <div class="category-grid" id="categoryGrid">
+        <!-- 由 JS 动态渲染 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 热门诗词 ===== -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2 class="section-title">热门推荐</h2>
+      <p class="section-subtitle">千古传诵 · 经典不容错过</p>
+      <div class="poem-grid" id="hotPoems">
+        <!-- 由 JS 动态渲染 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 知名作者 ===== -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <h2 class="section-title">知名作者</h2>
+      <p class="section-subtitle">走近诗词大家，品读传世之作</p>
+      <div class="author-grid" id="authorGrid">
+        <!-- 由 JS 动态渲染 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 底部 ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-col">
+        <h4>诗词赏析</h4>
+        <a href="about.html">关于本站</a>
+        <a href="about.html">更新计划</a>
+        <a href="about.html#contact">联系我们</a>
+      </div>
+      <div class="footer-col">
+        <h4>诗词分类</h4>
+        <a href="category.html?type=tang">唐诗</a>
+        <a href="category.html?type=song">宋词</a>
+        <a href="category.html?type=yuan">元曲</a>
+        <a href="category.html?type=modern">现代诗</a>
+      </div>
+      <div class="footer-col">
+        <h4>资源</h4>
+        <a href="search.html">搜索</a>
+        <a href="#" onclick="ThemeManager.toggle();return false;">🌙 切换主题</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>诗词赏析 · 品千年诗词，赏人间风月 · 数据来源为公开古籍资源</p>
+      <p style="margin-top:4px">© 2024 诗词赏析 · 非商用公益项目</p>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/audio-player.js"></script>
+  <script>
+    // ===== 首页初始化 =====
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 初始化主题
+      ThemeManager.init();
+      ThemeManager.bindToggle('.theme-toggle');
+
+      // 汉堡菜单
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+
+      // 关闭菜单（点击链接后）
+      navLinks.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          navLinks.classList.remove('open');
+        });
+      });
+
+      // 搜索框回车
+      document.querySelectorAll('.nav-search input').forEach(inp => {
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            const val = inp.value.trim();
+            if (val) Router.goSearch(val);
+          }
+        });
+      });
+
+      // 加载分类
+      const cats = await DataLoader.loadCategories();
+      const catGrid = document.getElementById('categoryGrid');
+      catGrid.innerHTML = cats.types.map(t => `
+        <a href="category.html?type=${t.id}" class="category-card">
+          <span class="icon">${t.icon}</span>
+          <h3>${t.name}</h3>
+          <p>${t.desc}</p>
+          <span class="count">${t.count} 首</span>
+        </a>
+      `).join('');
+
+      // 加载每日一诗
+      const dailyContainer = document.getElementById('dailyPoemContent');
+      try {
+        const poem = await DataLoader.getDailyPoem();
+        if (poem) {
+          dailyContainer.innerHTML = `
+            <div class="daily-poem-card">
+              <div class="label">📜 每日一诗</div>
+              <h3>${poem.title}</h3>
+              <div class="author">${poem.author} · ${poem.dynasty || ''}</div>
+              <div class="excerpt">${(poem.famous_lines && poem.famous_lines[0]) || poem.content.split('\n')[0]}</div>
+              <div class="card-footer">
+                <a href="detail.html?type=${poem._dailyType || 'tang'}&id=${poem.id}" class="btn btn-primary btn-sm">完整赏析 →</a>
+              </div>
+            </div>
+          `;
+        }
+      } catch(e) {
+        dailyContainer.innerHTML = '<div class="empty-state"><p>🌙 暂无每日一诗</p></div>';
+      }
+
+      // 加载热门推荐（取 featured.json 中 hot 列表）
+      try {
+        const featured = await DataLoader.loadFeatured();
+        const hotList = featured.hot || [];
+        const promises = hotList.slice(0, 8).map(async item => {
+          try {
+            const poems = await DataLoader.loadPoems(item.type);
+            return poems.find(p => String(p.id) === String(item.id));
+          } catch(e) { return null; }
+        });
+        const hotPoems = (await Promise.all(promises)).filter(p => p);
+        const hotContainer = document.getElementById('hotPoems');
+        if (hotPoems.length > 0) {
+          hotContainer.innerHTML = hotPoems.map(p => `
+            <a href="detail.html?type=${hotList[hotPoems.indexOf(p)]?.type || 'tang'}&id=${p.id}" class="poem-card">
+              <div class="card-body">
+                <h4>${p.title}</h4>
+                <div class="author">${p.author} · ${p.dynasty || ''}</div>
+                <div class="excerpt">${(p.famous_lines && p.famous_lines[0]) || p.content?.split('\n')[0] || ''}</div>
+              </div>
+              <div class="card-footer">
+                <span class="tag">${p.tags?.[0] || ''}</span>
+                <span>${(p.type || '')}</span>
+              </div>
+            </a>
+          `).join('');
+        }
+      } catch(e) {}
+
+      // 加载知名作者
+      try {
+        const authors = await DataLoader.getAllAuthors();
+        const topAuthors = authors.slice(0, 12);
+        const authorContainer = document.getElementById('authorGrid');
+        authorContainer.innerHTML = topAuthors.map(a => `
+          <a href="author.html?name=${encodeURIComponent(a.name)}" class="author-card">
+            <div class="avatar">${a.name[0]}</div>
+            <h4>${a.name}</h4>
+            <p>${a.dynasty} · ${a.poemCount} 首作品</p>
+          </a>
+        `).join('');
+      } catch(e) {}
+    });
+  </script>
+</body>
+</html>
